@@ -143,12 +143,11 @@ app.get("/api/hausaufgaben", (req, res) => {
 
 // Einzelnes Feld abrufen
 app.get("/api/hausaufgaben/:field", (req, res) => {
-  const field = req.params.field;
-  
-  if (hausaufgabenData.hasOwnProperty(field)) {
+  const { field } = req.params;
+  if (Object.prototype.hasOwnProperty.call(hausaufgabenData, field)) {
     res.json({
       success: true,
-      field: field,
+      field,
       value: hausaufgabenData[field],
       lastUpdated: new Date().toLocaleString('de-DE')
     });
@@ -162,10 +161,10 @@ app.get("/api/hausaufgaben/:field", (req, res) => {
 
 // Einzelnes Feld aktualisieren
 app.put("/api/hausaufgaben/:field", (req, res) => {
-  const field = req.params.field;
+  const { field } = req.params;
   const { value } = req.body;
   
-  if (value === undefined) {
+  if (typeof value === "undefined") {
     return res.status(400).json({
       success: false,
       error: "Wert (value) ist erforderlich"
@@ -188,17 +187,17 @@ app.put("/api/hausaufgaben/:field", (req, res) => {
   }
   
   hausaufgabenData[field] = value;
-  
   console.log(`📝 ${field} aktualisiert: "${value}"`);
   
   res.json({
     success: true,
     message: `${field} erfolgreich aktualisiert!`,
-    field: field,
-    value: value,
+    field,
+    value,
     lastUpdated: new Date().toLocaleString('de-DE')
   });
 });
+
 
 // Mehrere Felder gleichzeitig aktualisieren
 app.post("/api/hausaufgaben", (req, res) => {
