@@ -1,4 +1,7 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const app = express();
 
 // JSON Body Parser hinzufügen
@@ -232,6 +235,20 @@ app.get('/api/images/file/:filename', (req, res) => {
   if (fs.existsSync(file)) res.sendFile(file);
   else res.status(404).json({ success: false, error: 'Bild nicht gefunden' });
 });
+
+const IMAGE_DIR = path.join(__dirname, 'images');
+if (!fs.existsSync(IMAGE_DIR)) fs.mkdirSync(IMAGE_DIR);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, IMAGE_DIR),
+  filename: (req, file, cb) => {
+    const category = req.body.category || req.query.category || 'Uncategorized';
+    const uniqueName = `${category}__${Date.now()}__${file.originalname}`;
+    cb(null, uniqueName);
+  }
+});
+const upload = multer({ storage });
+
 
 // Bilder hochladen
 app.post('/api/images/upload', upload.array('images'), (req, res) => {
