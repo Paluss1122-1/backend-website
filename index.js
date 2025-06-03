@@ -279,12 +279,6 @@ app.delete('/api/images/category/:category', (req, res) => {
 });
 
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server läuft auf Port", process.env.PORT || 3000);
-  console.log("📚 Erweiterte Hausaufgaben-API bereit!");
-  console.log("🔧 Verfügbare Felder:", Object.keys(hausaufgabenData));
-});
-
 const analyticsData = {}; // { [websiteName]: { visits: [], users: Set } }
 
 // Analytics Tracker (Aufrufbar z. B. alle 10 Sekunden im Frontend)
@@ -348,4 +342,11 @@ app.get("/api/analytics/:website", (req, res) => {
       zeit: new Date(v.timestamp).toLocaleString('de-DE')
     }))
   });
+});
+
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server läuft auf Port", process.env.PORT || 3000);
+  console.log("📚 Erweiterte Hausaufgaben-API bereit!");
+  console.log("🔧 Verfügbare Felder:", Object.keys(hausaufgabenData));
 });
