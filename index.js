@@ -284,3 +284,68 @@ app.listen(process.env.PORT || 3000, () => {
   console.log("📚 Erweiterte Hausaufgaben-API bereit!");
   console.log("🔧 Verfügbare Felder:", Object.keys(hausaufgabenData));
 });
+
+const analyticsData = {}; // { [websiteName]: { visits: [], users: Set } }
+
+// Analytics Tracker (Aufrufbar z. B. alle 10 Sekunden im Frontend)
+app.post("/api/analytics/:website", (req, res) => {
+  const website = req.params.website;
+  const userAgent = req.headers['user-agent'] || "Unbekannt";
+  const ip = req.ip || req.connection.remoteAddress;
+
+  if (!analyticsData[website]) {
+    analyticsData[website] = {
+      visits: [],
+      users: new Set()
+    };
+  }
+
+  const isMobile = /mobile/i.test(userAgent);
+  const browser = (() => {
+    if (/chrome/i.test(userAgent)) return "Chrome";
+    if (/firefox/i.test(userAgent)) return "Firefox";
+    if (/safari/i.test(userAgent) && !/chrome/i.test(userAgent)) return "Safari";
+    if (/edg/i.test(userAgent)) return "Edge";
+    return "Unbekannt";
+  })();
+
+  analyticsData[website].visits.push({
+    timestamp: Date.now(),
+    browser: browser,
+    mobile: isMobile,
+    ip: ip
+  });
+
+  analyticsData[website].users.add(ip);
+
+  res.json({ success: true });
+});
+
+// Analytics auslesen
+app.get("/api/analytics/:website", (req, res) => {
+  const website = req.params.website;
+  const data = analyticsData[website];
+
+  if (!data) {
+    return res.status(404).json({
+      success: false,
+      error: "Keine Analytics-Daten für diese Website"
+    });
+  }
+
+  const now = Date.now();
+  const today = data.visits.filter(v => now - v.timestamp < 24 * 60 * 60 * 1000);
+
+  res.json({
+    success: true,
+    website,
+    gesamtBesuche: data.visits.length,
+    besucheHeute: today.length,
+    unterschiedlicheNutzer: data.users.size,
+    letzteBesuche: data.visits.slice(-10).map(v => ({
+      browser: v.browser,
+      gerät: v.mobile ? "Mobil" : "Desktop",
+      zeit: new Date(v.timestamp).toLocaleString('de-DE')
+    }))
+  });
+});
