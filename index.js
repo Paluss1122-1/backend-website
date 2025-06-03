@@ -342,7 +342,7 @@ app.get("/api/analytics/:website", (req, res) => {
     gesamtBesuche: data.visits.length,
     besucheHeute: today.length,
     unterschiedlicheNutzer: data.users.size,
-    letzteBesuche: data.visits.slice(-10).map(v => ({
+    letzteBesuche: data.visits.map(v => ({
       browser: v.browser,
       gerät: v.mobile ? "Mobil" : "Desktop",
       zeit: new Date(v.timestamp).toLocaleString('de-DE')
