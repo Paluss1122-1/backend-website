@@ -17,19 +17,17 @@ app.use((req, res, next) => {
 
 // In-Memory Storage für alle Hausaufgaben und Einstellungen
 let hausaufgabenData = {
-  "EnglischHausaufgabe": "SA Mediation Text Verbesserung fertig machen",
-  "EnglischHausaufgabeDatum": "30.5.25",
-  "DeutschHausaufgabe": "S.118/8 Mündlich, 9",
-  "DeutschHausaufgabeDatum": "30.5.25",
-  "MatheHausaufgabe": "S.176/8",
-  "MatheHausaufgabeDatum": "30.5.25",
-  "AlteMatheHausaufgabe": "NICHTS!",
-  "AlteMatheHausaufgabeDatum": "28.5.25",
+  "EnglischHausaufgabe": "NICHTS!",
+  "EnglischHausaufgabeDatum": "04.06.25",
+  "DeutschHausaufgabe": "S.118/12",
+  "DeutschHausaufgabeDatum": "02.06.25",
+  "MatheHausaufgabe": "S.185/17",
+  "MatheHausaufgabeDatum": "04.06.25",
   "WartungsarbeitenZeit": "08:50",
   "Wartungsarbeiten": false,
-  "Version": "6.3.2",
+  "Version": "6.4",
   "latein": 16
-};
+}
 
 // Hauptroute
 app.get("/", (req, res) => {
@@ -168,8 +166,6 @@ app.delete("/api/hausaufgaben", (req, res) => {
     "DeutschHausaufgabeDatum": "",
     "MatheHausaufgabe": "",
     "MatheHausaufgabeDatum": "",
-    "AlteMatheHausaufgabe": "",
-    "AlteMatheHausaufgabeDatum": "",
     "WartungsarbeitenZeit": "08:50",
     "Wartungsarbeiten": false,
     "Version": "6.3.2",
